@@ -1,0 +1,8 @@
+[package]
+
+name = "hacktheplanet"
+version = "0.1.0"
+authors = [ "DEADBLACKCLOVER <deadblackclover@protonmail.com>" ]
+
+[dependencies]
+reqwest = "0.9.4"
