@@ -1,3 +1,3 @@
-# rust-joker
+# hacktheplanet
 
-Mastodon bot posting jokes. Use Rust lang
+Mastodon bot. Use Rust lang
