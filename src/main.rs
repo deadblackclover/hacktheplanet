@@ -16,10 +16,17 @@ fn main() {
 			.send()
 			.map_err(|err| println!("request error: {}", err))
 			.map(|mut body| {
-				println!("Status:{:?}", body.status());
-				println!("{:?}", body.text());
+				let status = body.status();
+				if status == 200 {
+					println!("Status send");
+					println!("Status code:{:?}", body.status());
+				} else {
+					println!("Error send");
+					println!("Status code:{:?}", body.status());
+					println!("{:?}", body.text());
+				}
 			});
 
-    	thread::sleep(Duration::from_secs(60 * 60))	
+		thread::sleep(Duration::from_secs(60 * 60))	
 	}
 }
