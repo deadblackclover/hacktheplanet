@@ -4,55 +4,37 @@ services:
 
 variables:
   DOCKER_DRIVER: overlay
-  # You can find this on your Gitlab repo page, under "Registry"
   CONTAINER_GITLAB: registry.gitlab.com/deadblackclover/hacktheplanet
-  # It's just a tag, use whatever you want : back, front, test, staging...
   CONTAINER_TAG: latest
-  # Change with the name of your Heroku app
   CONTAINER_HEROKU: registry.heroku.com/hacktheplanet-rust/web
-  # Can be found on: https://dashboard.heroku.com/account under "API Key"
-  # HEROKU_API_KEY: <LOOKS LIKE A GUID>
-  # Heroku User name for login: usually an e-mail address
-  HEROKU_USER: myname@company.com
 
-# Order of tasks
 stages:
   - dockerize
   - deploy
-  
-# Register in your gitlab registry. The environment variables are set automatically, don't change anything.
+
 before_script:
   - docker login -u gitlab-ci-token -p "$CI_BUILD_TOKEN" "$CI_REGISTRY"
 
 dockerize:
   stage: dockerize
   script:
-    # Make an image from the current folder and tag it with the registry name and tag you defined
     - docker build -t $CONTAINER_GITLAB:$CONTAINER_TAG .
-    # Push to Gitlab
     - docker push $CONTAINER_GITLAB:$CONTAINER_TAG
   only:
     - master
 
-# At this point, you could go to your repo "Registry" page on Gitlab and see your image
-
 deploy_to_heroku:
   stage: deploy
-  # On Your CI/CD page on Gitlab, under "Environment", you can add new ones with informations like these and get informations about this deploy task
   environment:
     name: staging
     url: https://hacktheplanet-rust.herokuapp.com/
   services:
-  - docker:dind
+    - docker:dind
   script:
-    # Login to Heroku's registry
-    - docker login --username=$HEROKU_USER --password=$HEROKU_API_KEY registry.heroku.com
-    # Gets your Gitlab image
+    - docker login --username=_ --password=$HEROKU_API_KEY registry.heroku.com
     - docker pull $CONTAINER_GITLAB:$CONTAINER_TAG
-    # Make it good looking for Heroku
     - docker tag $CONTAINER_GITLAB:$CONTAINER_TAG $CONTAINER_HEROKU
-    # Push it to Heroku
     - docker push $CONTAINER_HEROKU
-    - ./release.sh $CI_PROJECT_NAME
+    - docker run --rm -e HEROKU_API_KEY=$HEROKU_API_KEY wingrunr21/alpine-heroku-cli container:release web --app hacktheplanet-rust
   only:
     - master
