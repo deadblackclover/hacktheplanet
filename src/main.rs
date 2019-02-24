@@ -1,18 +1,40 @@
 extern crate reqwest;
+extern crate actix_web;
 
 use std::collections::HashMap;
 use std::time::Duration;
 use std::thread;
 use std::env;
 
+use actix_web::{server, App, HttpRequest, Responder};
+
+fn page(req: &HttpRequest) -> impl Responder {
+	format!("Bot is running!")
+}
+
 fn main() {
 
 	let mut token: String = String::new();
+	let mut port: String = String::new();
+	port = "8080";
 
 	match env::var("BOT_TOKEN") {
 		Ok(t) => token=t,
 		Err(e) => println!("Error={:?}", e),
 	}
+
+	match env::var("PORT") {
+		Ok(t) => port=t,
+		Err(e) => println!("Error={:?}", e),
+	}
+
+	server::new(|| {
+	        App::new()
+			.resource("/", |r| r.f(page))
+	})
+	.bind(format!("0.0.0.0:{}", port))
+	.expect("Can not bind to port 8080")
+	.run();
 
 	loop {
 		let mut map = HashMap::new();
