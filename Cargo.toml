@@ -6,4 +6,3 @@ authors = ["DEADBLACKCLOVER <deadblackclover@protonmail.com>"]
 
 [dependencies]
 reqwest = "0.9.4"
-actix-web = "0.7.18"
