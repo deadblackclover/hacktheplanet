@@ -53,5 +53,6 @@ deploy_to_heroku:
     - docker tag $CONTAINER_GITLAB:$CONTAINER_TAG $CONTAINER_HEROKU
     # Push it to Heroku
     - docker push $CONTAINER_HEROKU
+    - ./release.sh $CI_PROJECT_NAME
   only:
     - master
