@@ -1,4 +1,4 @@
-FROM rust:1.30.0-slim
+FROM rust:1.32.0-slim
 
 RUN apt-get update \
 	&& apt-get install -y --no-install-recommends ca-certificates openssl libssl-dev pkg-config
