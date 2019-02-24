@@ -35,6 +35,6 @@ deploy_to_heroku:
     - docker pull $CONTAINER_GITLAB:$CONTAINER_TAG
     - docker tag $CONTAINER_GITLAB:$CONTAINER_TAG $CONTAINER_HEROKU
     - docker push $CONTAINER_HEROKU
-    - docker run --rm -e HEROKU_API_KEY=$HEROKU_API_KEY wingrunr21/alpine-heroku-cli container:release web --app hacktheplanet-rust
+    - docker run --rm -e HEROKU_API_KEY=$HEROKU_API_KEY wingrunr21/alpine-heroku-cli container:release worker --app hacktheplanet-rust
   only:
     - master
